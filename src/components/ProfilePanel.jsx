@@ -84,7 +84,7 @@ export default function ProfilePanel() {
           </div>
           <div className="profile-field">
             <label>Email address:</label>
-            <input type="email" value={email} />
+            <input type="email" value={email} readOnly />
           </div>
         </div>
         <div className="profile-buttons">

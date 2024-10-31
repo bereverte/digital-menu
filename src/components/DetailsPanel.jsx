@@ -91,25 +91,6 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
     toggleForm(selectedSection)
   }
 
-  /* const validationSchema = Yup.object().shape({
-    ...(selectedSection === "Categories" && {
-      name: Yup.string()
-        .required("name is a required field")
-        .test("unique", "category name has to be unique", values => {
-          return new Set(values).size === values.length
-        }),
-    }),
-    ...(selectedSection === "Menu Items" && {
-      name: Yup.string()
-        .required("name is a required field")
-        .test("unique", "menu item name has to be unique", values => {
-          return new Set(values).size === values.length
-        }),
-      categories: Yup.array().min(1, "select at least one category"),
-      price: Yup.number().min(0.01, "invalid price").required("price is a required field"),
-    }),
-  }) */
-
   const validationSchema = Yup.object().shape({
     ...(selectedSection === "Categories" && {
       name: Yup.string()
@@ -192,18 +173,6 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
       : [...values.categories, categoryId]
     setFieldValue("categories", updatedCategories)
   }
-
-  /* const handleCategoryChipChange = (categoryId, values, setFieldValue) => {
-    
-    if (!Array.isArray(values.categories)) {
-      setFieldValue("categories", [])
-    } else {
-      const updatedCategories = values.categories.includes(categoryId)
-        ? values.categories.filter(id => id !== categoryId)
-        : [...values.categories, categoryId]
-      setFieldValue("categories", updatedCategories)
-    }
-  } */
 
   const handleCategoryFilterChange = categoryId => {
     setFilteredCategory(categoryId)

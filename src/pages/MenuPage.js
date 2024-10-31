@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs"
-/* import "react-tabs/style/react-tabs.css" */
 import "../styles/MenuPage.css"
 import apiMethods from "../api"
 
@@ -45,13 +44,12 @@ export default function MenuPage() {
               {category.items.map(item => (
                 <div key={item.id} className="menu-item">
                   <div className="menu-item-name-description">
-                    <p>{item.name}</p>
-                    <p>{item.description}</p>
+                    <p className="name">{item.name}</p>
+                    <p className="description">{item.description}</p>
                   </div>
-                  <p className="menu-item-price">
-                    {item.price}
-                    {" €"}
-                  </p>
+                  <div className="menu-item-price">
+                    <p className="price">{item.price} €</p>
+                  </div>
                 </div>
               ))}
             </div>
