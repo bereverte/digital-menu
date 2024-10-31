@@ -1,0 +1,54 @@
+.menu-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  max-width: 700px;
+  padding: 20px 50px;
+}
+
+.react-tabs__tab {
+  flex-wrap: nowrap;
+  display: inline-block;
+  border: none;
+  border-bottom: 1.5px solid rgb(216, 216, 216);
+  bottom: -1px;
+  position: relative;
+  list-style: none;
+  padding: 10px 10px;
+  cursor: pointer;
+  color: rgb(194, 194, 194);
+}
+
+ul {
+  padding-inline-start: 0px;
+}
+
+.react-tabs__tab--selected {
+  border-bottom: 1.5px solid black;
+  background: #fff;
+  color: black;
+  font-weight: 450;
+  border-radius: 5px 5px 0 0;
+}
+
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.menu-item-name-description {
+  flex-grow: 1;
+  padding: 10px;
+}
+
+.menu-item-price {
+  align-self: flex-start;
+  padding: 10px;
+}
