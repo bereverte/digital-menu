@@ -186,6 +186,24 @@
   justify-content: space-between;
 }
 
+.add-button-container {
+  display: flex;
+  align-items: center;
+  background-color: #76a9bd;
+  padding: 5px;
+  border-radius: 50px;
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #4a819d;
+  }
+
+  p {
+    margin: 5px;
+  }
+}
+
 .search-container {
   display: flex;
   align-items: center;
@@ -376,6 +394,12 @@
       }
     }
   }
+}
+
+.message {
+  padding-left: 10px;
+  text-align: center;
+  color: #666;
 }
 
 .hamburger-menu {
