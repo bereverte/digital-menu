@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs"
-import "../styles/MenuPage.css"
+import "../styles/MenuPage.scss"
 import apiMethods from "../api"
 
 export default function MenuPage() {

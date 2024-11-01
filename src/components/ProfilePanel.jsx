@@ -79,12 +79,25 @@ export default function ProfilePanel() {
 
         <div className="profile-details">
           <div className="profile-field">
-            <label>Restaurant name:</label>
-            <input type="text" value={restaurantName} onChange={handleNameChange} />
+            <label htmlFor="restaurant-name">Restaurant name:</label>
+            <input
+              type="text"
+              id="restaurant-name"
+              name="restaurantName"
+              value={restaurantName}
+              onChange={handleNameChange}
+            />
           </div>
           <div className="profile-field">
-            <label>Email address:</label>
-            <input type="email" value={email} readOnly />
+            <label htmlFor="email">Email address:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              autoComplete="email"
+              readOnly
+            />
           </div>
         </div>
         <div className="profile-buttons">

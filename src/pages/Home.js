@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import "../styles/Home.css"
+import "../styles/Home.scss"
 import Header from "../components/Header"
 import MenuManagement from "../components/MenuManagement"
 import DetailsPanel from "../components/DetailsPanel"
