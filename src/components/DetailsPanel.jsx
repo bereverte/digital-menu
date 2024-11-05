@@ -1,23 +1,26 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
+import { MenuContext } from "../contexts/MenuContext"
 import * as Yup from "yup"
 import apiMethods from "../api"
 import plusIcon from "../assets/icons/plus-white.svg"
 import searchIcon from "../assets/icons/search.svg"
 import editIcon from "../assets/icons/edit.svg"
 import deleteIcon from "../assets/icons/x.svg"
+import Switch from "react-switch"
 
 export default function DetailsPanel({ selectedSection, restaurantId, showForm, toggleForm }) {
   const [data, setData] = useState([])
-  const [categories, setCategories] = useState(null)
+  const { categories } = useContext(MenuContext)
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [showModal, setShowModal] = useState(false)
   const [itemToDelete, setItemToDelete] = useState(null)
   const [editingItem, setEditingItem] = useState(null)
   const [filteredCategory, setFilteredCategory] = useState(null)
+  const [statuses, setStatuses] = useState({})
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (selectedSection === "Menu Items") {
       apiMethods
         .fetchCategories(restaurantId)
@@ -26,15 +29,15 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
         })
         .catch(error => console.error("Error fetching categories:", error))
     }
-  }, [selectedSection])
+  }, [selectedSection]) */
 
   useEffect(() => {
     setSearchTerm("")
     setFilteredCategory(null)
     setLoading(true)
 
-    /* console.log("Selected Section:", selectedSection)
-    console.log("Restaurant ID:", restaurantId) */
+    /* console.log("Selected Section:", selectedSection);
+    console.log("Restaurant ID:", restaurantId); */
 
     if (selectedSection === "Categories") {
       apiMethods
@@ -51,6 +54,14 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
         .then(response => {
           console.log("Menu Items response:", response.data)
           setData(response.data)
+
+          // Establecer los estados de disponibilidad para los items del menú
+          const initialStatuses = {}
+          response.data.forEach(item => {
+            initialStatuses[item.id] = item.is_available // Asegúrate de que 'is_available' esté en la respuesta
+          })
+          setStatuses(initialStatuses) // Actualiza el estado de `statuses`
+
           setLoading(false)
         })
         .catch(error => console.error("Error fetching menu items:", error))
@@ -178,6 +189,30 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
     setFilteredCategory(categoryId)
   }
 
+  const handleStatusChange = async itemId => {
+    // Asegúrate de pasar restaurantId y itemId
+    const newStatus = !statuses[itemId]
+
+    // Actualiza el estado del switch en el frontend
+    setStatuses(prevStatuses => ({
+      ...prevStatuses,
+      [itemId]: newStatus,
+    }))
+
+    try {
+      // Envía la actualización al backend, pasando restaurantId y itemId
+      await apiMethods.updateMenuItemAvailability(restaurantId, itemId)
+      console.log("Availability updated in the database")
+    } catch (error) {
+      console.error("Failed to update availability:", error)
+      // Si ocurre un error, puedes revertir el cambio en el estado
+      setStatuses(prevStatuses => ({
+        ...prevStatuses,
+        [itemId]: !newStatus,
+      }))
+    }
+  }
+
   const filteredData = data.filter(item => {
     if (filteredCategory) {
       return (
@@ -199,6 +234,7 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
               <img src={searchIcon} alt="Search icon" className="search icon" />
               <input
                 type="text"
+                id="search"
                 placeholder="Search"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
@@ -223,6 +259,7 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
                         <th>Name</th>
                         <th>Category</th>
                         <th>Price</th>
+                        <th>Availability</th>
                       </>
                     )}
                   </tr>
@@ -258,6 +295,16 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
                             : "No categories"}
                         </td>
                         <td>{item.price}</td>
+                        <td className="custom-switch">
+                          <Switch
+                            onChange={() => handleStatusChange(item.id)}
+                            checked={statuses[item.id] || false}
+                            onColor="#4caf50"
+                            offColor="#ccc"
+                            width={40}
+                            height={20}
+                          />
+                        </td>
                         <td className="td-icons">
                           <img
                             src={editIcon}
@@ -329,12 +376,18 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
                   <div className="input-container">
                     <Field
                       type="text"
+                      id="category_name"
                       name="name"
                       className={
                         "form-control" + (errors.name && touched.name ? " is-invalid" : "")
                       }
                     />
-                    <ErrorMessage name="name" component="div" className="invalid-feedback" />
+                    <ErrorMessage
+                      name="name"
+                      id="name"
+                      component="div"
+                      className="invalid-feedback"
+                    />
                   </div>
                 </div>
               )}
@@ -342,7 +395,7 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
               {selectedSection === "Menu Items" && (
                 <>
                   <div className="form-group">
-                    <label htmlFor="categories">
+                    <label>
                       Categories:<span className="required-asterisk">*</span>{" "}
                     </label>
                     <div className="input-container">
@@ -380,18 +433,24 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
                     <div className="input-container">
                       <Field
                         type="text"
+                        id="name"
                         name="name"
                         className={
                           "form-control" + (errors.name && touched.name ? " is-invalid" : "")
                         }
                       />
-                      <ErrorMessage name="name" component="div" className="invalid-feedback" />
+                      <ErrorMessage
+                        id="name"
+                        name="name"
+                        component="div"
+                        className="invalid-feedback"
+                      />
                     </div>
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="description">Description: </label>
-                    <Field as="textarea" name="description" />
+                    <Field as="textarea" id="description" name="description" />
                   </div>
 
                   <div className="form-group">
@@ -401,6 +460,7 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
                     <div className="input-container">
                       <Field
                         type="number"
+                        id="price"
                         name="price"
                         step="0.01"
                         className={

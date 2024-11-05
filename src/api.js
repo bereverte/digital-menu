@@ -88,6 +88,10 @@ export const updateRestaurant = (restaurantId, formData) => {
   })
 }
 
+export const updateMenuItemAvailability = (restaurantId, itemId) => {
+  return api.patch(`/api/restaurants/${restaurantId}/menuItems/${itemId}/toggle-availability/`)
+}
+
 const apiMethods = {
   login,
   register,
@@ -103,6 +107,7 @@ const apiMethods = {
   checkMenuItemExists,
   fetchRestaurant,
   updateRestaurant,
+  updateMenuItemAvailability,
 }
 
 export default apiMethods

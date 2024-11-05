@@ -1,9 +1,7 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import apiMethods from "../api"
 
 export default function Header() {
-  const restaurantId = localStorage.getItem("restaurantId")
   const restaurantName = localStorage.getItem("restaurantName")
 
   const navigate = useNavigate()
