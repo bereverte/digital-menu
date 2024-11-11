@@ -413,7 +413,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 350px;
+  max-width: 450px;
   margin: 45px auto;
   position: relative;
   z-index: 1;
@@ -454,11 +454,12 @@
 
     input {
       padding: 5px;
+      min-width: 210px;
       border: 1px solid #ddd;
       border-radius: 5px;
       min-height: 30px;
       font-family: "Roboto", sans-serif;
-      line-height: 1.5;
+      line-height: 1;
     }
   }
 

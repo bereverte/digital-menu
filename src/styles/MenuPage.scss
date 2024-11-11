@@ -2,13 +2,36 @@
   margin: auto;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  align-items: center;
 
   h1 {
-    align-self: center;
     font-weight: 400;
     font-size: 35px;
     margin: 20px;
   }
+
+  .footer-icons {
+    display: flex;
+    justify-content: center;
+    margin: 25px;
+  }
+
+  .icon {
+    font-size: 24px;
+    margin: 0 15px;
+    cursor: pointer;
+    color: gray;
+  }
+
+  .icon.active {
+    color: black;
+  }
+}
+
+.menu-content {
+  flex-grow: 1;
 }
 
 .react-tabs__tab {

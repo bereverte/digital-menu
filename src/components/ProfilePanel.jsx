@@ -1,45 +1,78 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
+import { AuthContext } from "../contexts/AuthContext"
 import apiMethods from "../api"
 import imageProfileDefault from "../assets/logo_default.png"
 import { useNavigate } from "react-router-dom"
 
 export default function ProfilePanel() {
-  const [restaurantName, setRestaurantName] = useState(localStorage.getItem("restaurantName"))
-  const restaurantId = localStorage.getItem("restaurantId")
-  const email = localStorage.getItem("email")
-
-  const [profilePhoto, setProfilePhoto] = useState(null)
-  const [selectedFile, setSelectedFile] = useState(null)
-
+  const { restaurantData, restaurantId, updateRestaurantData, userData } = useContext(AuthContext)
   const navigate = useNavigate()
+
+  console.log("Restaurant Data:", restaurantData)
+  console.log("User Data:", userData)
+
+  console.log("Logo:", restaurantData.logo)
+  console.log("Ja esta")
+
+  const email = userData?.email
+
+  // Inicialització amb valors buits per evitar advertències
+  const [restaurantName, setRestaurantName] = useState("")
+  const [address, setAddress] = useState("")
+  const [phone, setPhone] = useState("")
+  const [hours, setHours] = useState("")
+  const [profilePhoto, setProfilePhoto] = useState(imageProfileDefault) // Per defecte, la imatge per defecte
+  const [selectedFile, setSelectedFile] = useState(null)
 
   const handleCancel = () => {
     navigate("/home")
   }
 
+  // Sincronitza els estats locals amb restaurantData quan es carrega
   useEffect(() => {
-    if (restaurantId) {
-      apiMethods
-        .fetchRestaurant(restaurantId)
-        .then(response => {
-          setProfilePhoto(response.data.logo || imageProfileDefault)
-        })
-        .catch(error => {
-          console.error("Error fetching restaurant:", error)
-        })
+    if (restaurantData) {
+      console.log("Dades actualitzades de restaurantData:", restaurantData)
+      console.log("URL de logo a restaurantData:", restaurantData.logo)
+
+      setRestaurantName(restaurantData.name || "")
+      setAddress(restaurantData.address || "")
+      setPhone(restaurantData.phone || "")
+      setHours(restaurantData.hours || "")
+
+      // Assegura't que `profilePhoto` s'assigna correctament
+      setProfilePhoto(restaurantData.logo ? restaurantData.logo : imageProfileDefault)
     }
-  }, [restaurantId])
+  }, [restaurantData])
 
   const handleSaveChanges = async () => {
+    if (!restaurantId) {
+      console.error("Restaurant ID is undefined")
+      alert("Restaurant ID is missing. Please try again.")
+      return
+    }
+
     try {
       const formData = new FormData()
       if (restaurantName) formData.append("name", restaurantName)
+      if (address) formData.append("address", address)
+      if (phone) formData.append("phone", phone)
+      if (hours) formData.append("hours", hours)
       if (selectedFile) formData.append("logo", selectedFile)
+      console.log("Restaurant ID del save:", restaurantId)
 
       await apiMethods.updateRestaurant(restaurantId, formData)
 
-      // Actualitzar el localStorage després de guardar els canvis
-      localStorage.setItem("restaurantName", restaurantName)
+      // Actualitzar restaurantData al context després de guardar els canvis
+      /* updateRestaurantData({
+        name: restaurantName,
+        address,
+        phone,
+        hours,
+        logo: profilePhoto,
+      }) */
+
+      await updateRestaurantData()
+
       alert("Changes saved successfully!")
       navigate("/home")
     } catch (error) {
@@ -48,17 +81,11 @@ export default function ProfilePanel() {
     }
   }
 
-  const handleNameChange = e => {
-    setRestaurantName(e.target.value)
-  }
-
   const handlePhotoChange = e => {
     const file = e.target.files[0]
     if (file) {
-      // Previsualitzar la imatge seleccionada de manera ràpida
       const previewUrl = URL.createObjectURL(file)
       setProfilePhoto(previewUrl)
-      // Guardar el fitxer original en un estat separat per a enviar-lo després
       setSelectedFile(file)
     }
   }
@@ -85,7 +112,7 @@ export default function ProfilePanel() {
               id="restaurant-name"
               name="restaurantName"
               value={restaurantName}
-              onChange={handleNameChange}
+              onChange={e => setRestaurantName(e.target.value)}
             />
           </div>
           <div className="profile-field">
@@ -97,6 +124,36 @@ export default function ProfilePanel() {
               value={email}
               autoComplete="email"
               readOnly
+            />
+          </div>
+          <div className="profile-field">
+            <label htmlFor="address">Address:</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              value={address}
+              onChange={e => setAddress(e.target.value)}
+            />
+          </div>
+          <div className="profile-field">
+            <label htmlFor="phone">Phone:</label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+            />
+          </div>
+          <div className="profile-field">
+            <label htmlFor="hours">Hours:</label>
+            <input
+              type="text"
+              id="hours"
+              name="hours"
+              value={hours}
+              onChange={e => setHours(e.target.value)}
             />
           </div>
         </div>

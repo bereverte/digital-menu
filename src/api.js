@@ -92,6 +92,10 @@ export const updateMenuItemAvailability = (restaurantId, itemId) => {
   return api.patch(`/api/restaurants/${restaurantId}/menuItems/${itemId}/toggle-availability/`)
 }
 
+export const fetchAuthenticatedUser = restaurantId => {
+  return api.get(`/api/restaurants/${restaurantId}/users/me/`)
+}
+
 const apiMethods = {
   login,
   register,
@@ -108,6 +112,7 @@ const apiMethods = {
   fetchRestaurant,
   updateRestaurant,
   updateMenuItemAvailability,
+  fetchAuthenticatedUser,
 }
 
 export default apiMethods

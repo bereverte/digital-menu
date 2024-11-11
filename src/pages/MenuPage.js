@@ -1,61 +1,45 @@
 import React, { useState, useEffect } from "react"
-import { Tabs, TabList, Tab, TabPanel } from "react-tabs"
+import MenuContent from "../components/MenuContent"
+import ContactInfo from "../components/ContactInfo"
+import { FaUtensils, FaPhone } from "react-icons/fa"
 import "../styles/MenuPage.scss"
 import apiMethods from "../api"
 
 export default function MenuPage() {
-  const restaurantId = localStorage.getItem("restaurantId")
   const restaurantName = localStorage.getItem("restaurantName")
-  const [categories, setCategories] = useState([])
+  const [selectedTab, setSelectedTab] = useState("menu")
+  const restaurantId = localStorage.getItem("restaurantId")
+  const [restaurantInfo, setRestaurantInfo] = useState(null)
 
   useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        const categoriesResponse = await apiMethods.fetchCategories(restaurantId)
-        const menuItemsResponse = await apiMethods.fetchMenuItems(restaurantId)
-
-        const categoriesWithItems = categoriesResponse.data.map(category => ({
-          ...category,
-          items: menuItemsResponse.data.filter(item => item.categories.includes(category.id)),
-        }))
-
-        setCategories(categoriesWithItems)
-      } catch (error) {
-        console.error("Error fetching menu:", error)
-      }
-    }
-
-    fetchMenu()
+    apiMethods
+      .fetchRestaurant(restaurantId)
+      .then(response => {
+        console.log("Restaurant Info:", response.data)
+        setRestaurantInfo(response.data)
+      })
+      .catch(error => console.error("Error fetching restaurant info:", error))
   }, [restaurantId])
+
+  const hasContactInfo = restaurantInfo?.address || restaurantInfo?.phone || restaurantInfo?.hours
 
   return (
     <div className="menu-page">
       <h1>{restaurantName}</h1>
-      <Tabs>
-        <TabList>
-          {categories.map(category => (
-            <Tab key={category.id}>{category.name}</Tab>
-          ))}
-        </TabList>
+      {selectedTab === "menu" ? <MenuContent /> : <ContactInfo />}
 
-        {categories.map(category => (
-          <TabPanel key={category.id}>
-            <div className="menu-items">
-              {category.items.map(item => (
-                <div key={item.id} className="menu-item">
-                  <div className="menu-item-name-description">
-                    <p className="name">{item.name}</p>
-                    <p className="description">{item.description}</p>
-                  </div>
-                  <div className="menu-item-price">
-                    <p className="price">{item.price} €</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </TabPanel>
-        ))}
-      </Tabs>
+      {hasContactInfo && (
+        <div className="footer-icons">
+          <FaUtensils
+            className={`icon ${selectedTab === "menu" ? "active" : ""}`}
+            onClick={() => setSelectedTab("menu")}
+          />
+          <FaPhone
+            className={`icon ${selectedTab === "contact" ? "active" : ""}`}
+            onClick={() => setSelectedTab("contact")}
+          />
+        </div>
+      )}
     </div>
   )
 }

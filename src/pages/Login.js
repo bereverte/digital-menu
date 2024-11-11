@@ -1,39 +1,27 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import "../styles/AuthPage.scss"
-import apiMethods from "../api"
+import { AuthContext } from "../contexts/AuthContext" // Importa el context d'autenticació
 
 export default function Login() {
   const [failedCredentials, setFailedCredentials] = useState("")
   const navigate = useNavigate()
+  const { login } = useContext(AuthContext) // Extreu la funció `login` del context
 
   const validationSchema = Yup.object({
-    email: Yup.string().email("invalid email address").required("email is required"),
+    email: Yup.string().email("Invalid email address").required("Email is required"),
     password: Yup.string()
-      .min(6, "password must be at least 6 characters")
-      .required("password is required"),
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
   })
 
   const handleSubmit = async (values, { setSubmitting }) => {
     setSubmitting(true)
     try {
-      // Login
-      const response = await apiMethods.login(values.email, values.password)
-      console.log("Response from API:", response)
-
-      if (response && response.data) {
-        const { token, restaurant_id, restaurant_name, email } = response.data
-        localStorage.setItem("token", token)
-        localStorage.setItem("restaurantId", restaurant_id)
-        localStorage.setItem("restaurantName", restaurant_name)
-        localStorage.setItem("email", email)
-        navigate("/home")
-      } else {
-        console.error("Invalid response from API:", response)
-        setFailedCredentials("Authentication failed. Please check your credentials.")
-      }
+      await login(values.email, values.password) // Utilitza la funció `login` del context
+      navigate("/home") // Redirigeix a Home després d'iniciar sessió correctament
     } catch (error) {
       console.error("Authentication error:", error)
       setFailedCredentials("Authentication failed. Please check your credentials.")
@@ -57,7 +45,7 @@ export default function Login() {
             <>
               <Form className="auth-form-container">
                 {failedCredentials && (
-                  <div className="error-message auth-error">{failedCredentials}</div> // Muestra el mensaje de error
+                  <div className="error-message auth-error">{failedCredentials}</div>
                 )}
 
                 <div className="auth-form-group">

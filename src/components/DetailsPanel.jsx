@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
-import { MenuContext } from "../contexts/MenuContext"
+import { RestaurantContext } from "../contexts/RestaurantContext"
 import * as Yup from "yup"
 import apiMethods from "../api"
 import plusIcon from "../assets/icons/plus-white.svg"
@@ -11,7 +11,7 @@ import Switch from "react-switch"
 
 export default function DetailsPanel({ selectedSection, restaurantId, showForm, toggleForm }) {
   const [data, setData] = useState([])
-  const { categories } = useContext(MenuContext)
+  const { categories } = useContext(RestaurantContext)
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [showModal, setShowModal] = useState(false)
