@@ -1,0 +1,103 @@
+.profile-qr-container {
+  display: flex;
+  margin: 45px auto;
+  gap: 10%;
+  justify-content: center;
+  padding: 0 30px;
+
+  .profile-qr-header {
+    background-color: #76a9bd;
+    font-weight: 300;
+    color: #f6f5f2;
+    padding: 7px 10px;
+    font-size: 14px;
+    text-align: start;
+    margin-bottom: 20px;
+  }
+
+  .qr-content,
+  .profile-content,
+  .profile-photo-container,
+  .profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .qr-container {
+    .qr-content {
+      margin-top: 20px;
+    }
+
+    p {
+      align-self: center;
+      margin-top: 30px;
+    }
+
+    .restaurantName-qr {
+      margin-top: 0;
+      font-weight: bold;
+      font-size: 14px;
+    }
+  }
+}
+
+.qr-container,
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 450px;
+  /* min-width: 350px; */
+  position: relative;
+  z-index: 1;
+}
+
+.profile-container {
+  .profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .profile-field {
+    display: flex;
+    align-items: center;
+
+    label {
+      min-width: 110px;
+    }
+
+    input {
+      padding: 5px;
+      min-width: 210px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      min-height: 30px;
+      font-family: "Roboto", sans-serif;
+      line-height: 1;
+    }
+  }
+
+  .profile-buttons {
+    display: flex;
+    align-self: center;
+    gap: 15px;
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #76a9bd;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 12px;
+
+      &:hover {
+        background-color: #4a819d;
+      }
+    }
+  }
+}

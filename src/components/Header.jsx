@@ -1,8 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
+import { AuthContext } from "../contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
 
 export default function Header() {
-  const restaurantName = localStorage.getItem("restaurantName")
+  const { restaurantData } = useContext(AuthContext)
 
   const navigate = useNavigate()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -26,7 +27,9 @@ export default function Header() {
       </button>
       <nav className={`header-nav ${isMobileMenuOpen ? "open" : ""}`}>
         <a href="/home">Home</a>
-        <a onClick={() => navigate(`/${getRestaurantUrlName(restaurantName)}/carta`)}>Preview</a>
+        <a onClick={() => navigate(`/${getRestaurantUrlName(restaurantData.name)}/carta`)}>
+          Preview
+        </a>
         <a onClick={() => navigate("/profile")}>Profile</a>
         <a onClick={handleLogout}>Logout</a>
       </nav>

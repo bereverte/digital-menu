@@ -1,36 +1,31 @@
-import React, { useEffect, useState } from "react"
-import apiMethods from "../api"
+import React, { useContext } from "react"
+import { AuthContext } from "../contexts/AuthContext"
 
 export default function ContactInfo() {
-  const restaurantId = localStorage.getItem("restaurantId")
-  const [restaurantInfo, setRestaurantInfo] = useState(null)
-
-  useEffect(() => {
-    apiMethods
-      .fetchRestaurant(restaurantId)
-      .then(response => {
-        console.log("Restaurant Info:", response.data)
-        setRestaurantInfo(response.data)
-      })
-      .catch(error => console.error("Error fetching restaurant info:", error))
-  }, [restaurantId])
+  const { restaurantData } = useContext(AuthContext)
 
   return (
-    <>
+    <div className="contact-content">
       <h2>Contact Information</h2>
-      {restaurantInfo && (
+      {restaurantData && (
         <div>
-          <p>
-            <strong>Address:</strong> {restaurantInfo.address || "Not available"}
-          </p>
-          <p>
-            <strong>Phone:</strong> {restaurantInfo.phone || "Not available"}
-          </p>
-          <p>
-            <strong>Hours:</strong> {restaurantInfo.hours || "Not available"}
-          </p>
+          {restaurantData.address && (
+            <p>
+              <strong>Address:</strong> {restaurantData.address}
+            </p>
+          )}
+          {restaurantData.phone && (
+            <p>
+              <strong>Phone:</strong> {restaurantData.phone}
+            </p>
+          )}
+          {restaurantData.hours && (
+            <p>
+              <strong>Hours:</strong> {restaurantData.hours}
+            </p>
+          )}
         </div>
       )}
-    </>
+    </div>
   )
 }

@@ -1,30 +1,25 @@
-/* import React, { useEffect, useState } from "react"
-import QRCode from "qrcode.react"
+import React from "react"
+import { QRCodeSVG } from "qrcode.react"
+import { useContext } from "react"
+import { AuthContext } from "../contexts/AuthContext"
 
-export default function QRCodePanel() {
-  const restaurantName = localStorage.getItem("restaurantName")
-  const [qrUrl, setQrUrl] = useState("")
+const getRestaurantUrlName = name => {
+  return encodeURIComponent(name.replace(/\s+/g, "-").toLowerCase())
+}
 
-  useEffect(() => {
-    if (restaurantName) {
-      setQrUrl(`${window.location.origin}/${restaurantName}/carta`) // URL única per al QR
-    }
-  }, [restaurantName])
+export default function QRPreviewLink() {
+  const { restaurantData } = useContext(AuthContext)
+
+  const previewUrl = `http://localhost:3000/${getRestaurantUrlName(restaurantData.name)}/carta`
 
   return (
-    <div className="profile-container">
-      <div className="profile-header">QR per a la carta</div>
-      <div className="profile-content">
-        <p>Escaneja el codi QR per accedir a la carta del restaurant:</p>
-        <div className="qr-container">
-          {qrUrl ? <QRCode value={qrUrl} size={200} level={"H"} /> : <p>Generant el QR...</p>}
-        </div>
-        <div className="profile-field">
-          <label>URL de la carta:</label>
-          <input type="text" readOnly value={qrUrl} />
-        </div>
+    <div className="qr-container">
+      <div className="profile-qr-header">QR Code to Preview</div>
+      <div className="qr-content">
+        <QRCodeSVG value={previewUrl} size={150} />
+        <p className="restaurantName-qr">{restaurantData.name}</p>
       </div>
+      <p>Scan the QR code to preview the page!</p>
     </div>
   )
 }
- */

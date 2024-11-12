@@ -1,31 +1,27 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
+import { AuthContext } from "../contexts/AuthContext"
 import MenuContent from "../components/MenuContent"
 import ContactInfo from "../components/ContactInfo"
 import { FaUtensils, FaPhone } from "react-icons/fa"
 import "../styles/MenuPage.scss"
-import apiMethods from "../api"
 
 export default function MenuPage() {
-  const restaurantName = localStorage.getItem("restaurantName")
+  const { restaurantData, restaurantId, updateRestaurantData } = useContext(AuthContext)
+
   const [selectedTab, setSelectedTab] = useState("menu")
-  const restaurantId = localStorage.getItem("restaurantId")
-  const [restaurantInfo, setRestaurantInfo] = useState(null)
 
   useEffect(() => {
-    apiMethods
-      .fetchRestaurant(restaurantId)
-      .then(response => {
-        console.log("Restaurant Info:", response.data)
-        setRestaurantInfo(response.data)
-      })
-      .catch(error => console.error("Error fetching restaurant info:", error))
-  }, [restaurantId])
+    // Si `restaurantData` ja està carregat al context, no cal fer cap altra crida
+    if (!restaurantData && restaurantId) {
+      updateRestaurantData()
+    }
+  }, [restaurantData, restaurantId, updateRestaurantData])
 
-  const hasContactInfo = restaurantInfo?.address || restaurantInfo?.phone || restaurantInfo?.hours
+  const hasContactInfo = restaurantData?.address || restaurantData?.phone || restaurantData?.hours
 
   return (
     <div className="menu-page">
-      <h1>{restaurantName}</h1>
+      <h1>{restaurantData?.name}</h1>
       {selectedTab === "menu" ? <MenuContent /> : <ContactInfo />}
 
       {hasContactInfo && (

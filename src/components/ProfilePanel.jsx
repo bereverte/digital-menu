@@ -53,24 +53,14 @@ export default function ProfilePanel() {
 
     try {
       const formData = new FormData()
-      if (restaurantName) formData.append("name", restaurantName)
-      if (address) formData.append("address", address)
-      if (phone) formData.append("phone", phone)
-      if (hours) formData.append("hours", hours)
+      formData.append("name", restaurantName)
+      formData.append("address", address)
+      formData.append("phone", phone)
+      formData.append("hours", hours)
       if (selectedFile) formData.append("logo", selectedFile)
       console.log("Restaurant ID del save:", restaurantId)
 
       await apiMethods.updateRestaurant(restaurantId, formData)
-
-      // Actualitzar restaurantData al context després de guardar els canvis
-      /* updateRestaurantData({
-        name: restaurantName,
-        address,
-        phone,
-        hours,
-        logo: profilePhoto,
-      }) */
-
       await updateRestaurantData()
 
       alert("Changes saved successfully!")
@@ -92,7 +82,7 @@ export default function ProfilePanel() {
 
   return (
     <div className="profile-container">
-      <div className="profile-header">Personal Info</div>
+      <div className="profile-qr-header">Personal Info</div>
       <div className="profile-content">
         <div className="profile-photo-container">
           <img src={profilePhoto} alt="Foto de perfil" className="profile-photo" />
