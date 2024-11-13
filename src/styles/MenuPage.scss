@@ -1,16 +1,16 @@
 .menu-page {
   margin: auto;
   display: flex;
+  height: 100vh;
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh;
-  align-items: center;
 
   h1 {
     font-weight: 400;
     font-size: 35px;
     margin: 20px;
     margin-top: 40px;
+    text-align: center;
   }
 
   .footer-icons {
@@ -33,6 +33,7 @@
 
 .contact-content {
   display: flex;
+  align-items: center;
   flex-direction: column;
   flex-grow: 1;
 
@@ -46,7 +47,6 @@
 }
 
 .react-tabs__tab {
-  flex-wrap: nowrap;
   display: inline-block;
   border: none;
   border-bottom: 1.5px solid rgb(216, 216, 216);
@@ -71,6 +71,7 @@ ul {
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
+  white-space: nowrap;
   scrollbar-width: none;
 
   &::-webkit-scrollbar {
@@ -118,10 +119,12 @@ li {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 800px) {
+  .menu-page {
+    align-items: center;
+  }
   .react-tabs {
-    max-width: 700px;
-    align-self: center;
+    max-width: 800px;
     width: 100%;
   }
 
