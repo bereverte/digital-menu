@@ -22,10 +22,21 @@ export default function Register() {
   const handleSubmit = async (values, { setSubmitting }) => {
     setSubmitting(true)
     try {
-      await apiMethods.register(values.restaurant_name, values.email, values.password)
+      const response = await apiMethods.register(
+        values.restaurant_name,
+        values.email,
+        values.password
+      )
+      console.log("Register response data:", response.data)
+
       alert("Your account has been successfully created! You can now log in.")
       navigate("/accounts/login")
     } catch (error) {
+      if (error.response && error.response.data.error) {
+        alert(error.response.data.error)
+      } else {
+        alert("An error occurred during registration. Please try again.")
+      }
       console.error("Authentication error:", error)
     }
     setSubmitting(false)

@@ -20,17 +20,6 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
   const [filteredCategory, setFilteredCategory] = useState(null)
   const [statuses, setStatuses] = useState({})
 
-  /* useEffect(() => {
-    if (selectedSection === "Menu Items") {
-      apiMethods
-        .fetchCategories(restaurantId)
-        .then(response => {
-          setCategories(response.data)
-        })
-        .catch(error => console.error("Error fetching categories:", error))
-    }
-  }, [selectedSection]) */
-
   useEffect(() => {
     setSearchTerm("")
     setFilteredCategory(null)
@@ -120,17 +109,21 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
           "unique-menu-item",
           "This menu item already exists in this category",
           async function (value) {
-            const { categories } = this.parent // Obtenemos las categorías seleccionadas
-            if (!value || categories.length === 0) return true // Si no hay valor o categorías, no validamos
+            const { categories, id } = this.parent // Obtenim les categories i l'ID si estem editant
 
-            // Llamada a la API para verificar si existe un ítem de menú con el mismo nombre y categorías
+            if (!value || categories.length === 0) return true // Si no hi ha nom o categories, no validem
+
+            // Si estem editant, no validem el mateix ítem
+            if (id) {
+              return true // No cridem l'API si estem editant
+            }
+
+            // Crida a l'API per verificar si existeix un ítem de menú amb el mateix nom i categories
             const response = await apiMethods.checkMenuItemExists(restaurantId, value, categories)
-            return !response.data.exists // Retorna true si no existe
+            return !response.data.exists
           }
         ),
-
       categories: Yup.array().min(1, "select at least one category"),
-
       price: Yup.number().min(0.01, "invalid price").required("price is a required field"),
     }),
   })

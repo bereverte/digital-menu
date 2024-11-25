@@ -452,6 +452,19 @@
     display: block;
   }
 
+  .form-container {
+    .form-group {
+      width: 100%; // Assegura que el contenidor ocupi tot l'espai disponible
+    }
+
+    .form-group input,
+    .form-group textarea {
+      max-width: 400px;
+      width: 100%; // Fa que els inputs ocupin tot l'espai del seu contenidor
+      box-sizing: border-box; // Inclou el padding dins de l'amplada
+    }
+  }
+
   .header-nav {
     display: none;
     flex-direction: column;
