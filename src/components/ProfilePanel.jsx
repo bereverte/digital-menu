@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react"
-import { AuthContext } from "../contexts/AuthContext"
-import apiMethods from "../api"
-import imageProfileDefault from "../assets/logo_default.png"
+import { AuthContext } from "contexts/AuthContext"
+import apiMethods from "api"
+import imageProfileDefault from "assets/logo_default.png"
 import { useNavigate } from "react-router-dom"
 
 export default function ProfilePanel() {
@@ -91,6 +91,7 @@ export default function ProfilePanel() {
             accept="image/*"
             onChange={handlePhotoChange}
             className="photo-input"
+            aria-label="Upload profile photo"
           />
         </div>
 

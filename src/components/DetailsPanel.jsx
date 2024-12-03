@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
-import { RestaurantContext } from "../contexts/RestaurantContext"
+import { RestaurantContext } from "contexts/RestaurantContext"
 import * as Yup from "yup"
-import apiMethods from "../api"
-import plusIcon from "../assets/icons/plus-white.svg"
-import searchIcon from "../assets/icons/search.svg"
-import editIcon from "../assets/icons/edit.svg"
-import deleteIcon from "../assets/icons/x.svg"
+import apiMethods from "api"
+import plusIcon from "assets/icons/plus-white.svg"
+import searchIcon from "assets/icons/search.svg"
+import editIcon from "assets/icons/edit.svg"
+import deleteIcon from "assets/icons/x.svg"
 import Switch from "react-switch"
 
 export default function DetailsPanel({ selectedSection, restaurantId, showForm, toggleForm }) {

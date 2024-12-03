@@ -2,8 +2,8 @@ import React from "react"
 import { useNavigate } from "react-router-dom"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
-import "../styles/AuthPage.scss"
-import apiMethods from "../api"
+import "styles/AuthPage.scss"
+import apiMethods from "api"
 
 export default function Register() {
   const navigate = useNavigate()

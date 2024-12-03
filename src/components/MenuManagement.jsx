@@ -1,5 +1,5 @@
 import React from "react"
-import plusIcon from "../assets/icons/plus.svg"
+import plusIcon from "assets/icons/plus.svg"
 
 export default function MenuManagement({ toggleForm }) {
   return (

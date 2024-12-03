@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react"
-import { AuthContext } from "../contexts/AuthContext"
+import { AuthContext } from "contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
+import { getRestaurantUrlName } from "utils"
 
 export default function Header() {
   const { restaurantData } = useContext(AuthContext)
@@ -14,11 +15,6 @@ export default function Header() {
     navigate("/accounts/login")
   }
 
-  // Converteix el nom del restaurant a un format amigable per a la URL
-  const getRestaurantUrlName = name => {
-    return encodeURIComponent(name.replace(/\s+/g, "-").toLowerCase())
-  }
-
   return (
     <header className="header">
       <p>Restaurant Dashboard</p>
@@ -26,7 +22,7 @@ export default function Header() {
         ☰
       </button>
       <nav className={`header-nav ${isMobileMenuOpen ? "open" : ""}`}>
-        <a href="/home">Home</a>
+        <a onClick={() => navigate("/home")}>Home</a>
         <a onClick={() => navigate(`/${getRestaurantUrlName(restaurantData.name)}/carta`)}>
           Preview
         </a>

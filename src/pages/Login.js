@@ -2,8 +2,8 @@ import React, { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
-import "../styles/AuthPage.scss"
-import { AuthContext } from "../contexts/AuthContext" // Importa el context d'autenticació
+import "styles/AuthPage.scss"
+import { AuthContext } from "contexts/AuthContext" // Importa el context d'autenticació
 
 export default function Login() {
   const [failedCredentials, setFailedCredentials] = useState("")

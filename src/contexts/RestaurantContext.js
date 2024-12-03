@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react"
-import apiMethods from "../api"
+import apiMethods from "api"
 
 export const RestaurantContext = createContext()
 

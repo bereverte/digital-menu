@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { RestaurantContext } from "../contexts/RestaurantContext"
+import { RestaurantContext } from "contexts/RestaurantContext"
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs"
 
 export default function MenuContent() {
