@@ -25,6 +25,7 @@ function AppRoutes() {
 
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/home" />} />
       <Route
         path="/home"
         element={isAuthenticated() ? <Home /> : <Navigate to="/accounts/login" />}
