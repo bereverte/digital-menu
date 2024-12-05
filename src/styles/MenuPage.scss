@@ -29,6 +29,24 @@
   .icon.active {
     color: black;
   }
+
+  .back-arrow {
+    margin: 0;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 35px;
+    max-height: unset;
+    cursor: pointer;
+
+    &.icon {
+      transition: transform 0.2s ease-in-out;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
 }
 
 .contact-content {

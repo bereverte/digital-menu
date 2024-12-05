@@ -25,8 +25,7 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
     setFilteredCategory(null)
     setLoading(true)
 
-    /* console.log("Selected Section:", selectedSection);
-    console.log("Restaurant ID:", restaurantId); */
+    console.log("Categories:", categories)
 
     if (selectedSection === "Categories") {
       apiMethods
@@ -181,6 +180,10 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
   const handleCategoryFilterChange = categoryId => {
     setFilteredCategory(categoryId)
   }
+
+  useEffect(() => {
+    console.log("Restaurant ID:", restaurantId)
+  }, [restaurantId])
 
   const handleStatusChange = async itemId => {
     // Asegúrate de pasar restaurantId y itemId

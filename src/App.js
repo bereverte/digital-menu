@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
 import { AuthContext, AuthProvider } from "contexts/AuthContext"
 import { RestaurantProvider } from "contexts/RestaurantContext"
+import { PreviewProvider } from "contexts/PreviewContext"
 import Home from "pages/Home"
 import Login from "pages/Login"
 import Register from "pages/Register"
@@ -13,7 +14,9 @@ function App() {
     <Router>
       <AuthProvider>
         <RestaurantProvider>
-          <AppRoutes />
+          <PreviewProvider>
+            <AppRoutes />
+          </PreviewProvider>
         </RestaurantProvider>
       </AuthProvider>
     </Router>
