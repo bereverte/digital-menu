@@ -4,11 +4,11 @@ import { useContext } from "react"
 import { AuthContext } from "contexts/AuthContext"
 import { getRestaurantUrlName } from "utils"
 
-import { API_BASE_URL } from "api"
-
 export default function QRCodePanel() {
   const { restaurantData } = useContext(AuthContext)
-  const previewUrl = `${API_BASE_URL}/${getRestaurantUrlName(restaurantData.name)}/carta`
+  const previewUrl = `https://digitalmenu-khaki.vercel.app/${getRestaurantUrlName(
+    restaurantData.name
+  )}/carta`
 
   return (
     <div className="qr-container">
