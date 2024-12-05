@@ -1,18 +1,30 @@
 import React from "react"
 import { render, screen, fireEvent } from "@testing-library/react"
 import { AuthContext } from "contexts/AuthContext"
+import { PreviewContext } from "contexts/PreviewContext"
 import MenuPage from "pages/MenuPage"
 
 jest.mock("components/MenuContent", () => () => <div>Menu Content</div>)
 jest.mock("components/ContactInfo", () => () => <div>Contact Info</div>)
 
+// Mock de `useNavigate`
+const mockNavigate = jest.fn()
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => mockNavigate,
+}))
+
 describe("MenuPage", () => {
   const mockUpdateRestaurantData = jest.fn()
 
-  const renderMenuPage = contextValue =>
+  const renderMenuPage = (contextValue, previewMode = false) =>
     render(
       <AuthContext.Provider value={contextValue}>
-        <MenuPage />
+        <PreviewContext.Provider
+          value={{ isPreviewMode: previewMode, setIsPreviewMode: jest.fn() }}
+        >
+          <MenuPage />
+        </PreviewContext.Provider>
       </AuthContext.Provider>
     )
 
@@ -91,5 +103,31 @@ describe("MenuPage", () => {
     // Torna a MenuContent
     fireEvent.click(screen.getByRole("button", { name: /menu/i }))
     expect(screen.getByText("Menu Content")).toBeInTheDocument()
+  })
+
+  test("renders back arrow only in preview mode", () => {
+    renderMenuPage(
+      {
+        restaurantData: { name: "Test Restaurant", address: "123 Main Street" },
+        restaurantId: "123",
+        updateRestaurantData: mockUpdateRestaurantData,
+      },
+      true // isPreviewMode
+    )
+
+    expect(screen.getByAltText("Back arrow icon")).toBeInTheDocument()
+  })
+
+  test("does not render back arrow when not in preview mode", () => {
+    renderMenuPage(
+      {
+        restaurantData: { name: "Test Restaurant", address: "123 Main Street" },
+        restaurantId: "123",
+        updateRestaurantData: mockUpdateRestaurantData,
+      },
+      false // isPreviewMode
+    )
+
+    expect(screen.queryByAltText("Back arrow icon")).not.toBeInTheDocument()
   })
 })

@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react"
 import Header from "components/Header"
 import { BrowserRouter } from "react-router-dom"
 import { AuthContext } from "contexts/AuthContext"
+import { PreviewContext } from "contexts/PreviewContext"
 
 jest.mock("axios")
 
@@ -19,7 +20,9 @@ describe("Header component", () => {
     render(
       <BrowserRouter>
         <AuthContext.Provider value={{ restaurantData: mockRestaurantData }}>
-          <Header />
+          <PreviewContext.Provider value={{ setIsPreviewMode: jest.fn() }}>
+            <Header />
+          </PreviewContext.Provider>
         </AuthContext.Provider>
       </BrowserRouter>
     )

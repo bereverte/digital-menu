@@ -29,9 +29,19 @@ export default function MenuPage() {
 
   const hasContactInfo = restaurantData?.address || restaurantData?.phone || restaurantData?.hours
 
+  console.log("isPreviewMode:", isPreviewMode)
+
   return (
     <div className="menu-page">
-      <img src={backArrow} alt="Back arrow icon" className="back-arrow icon" onClick={handleBack} />
+      {isPreviewMode && (
+        <img
+          src={backArrow}
+          alt="Back arrow icon"
+          className="back-arrow icon"
+          onClick={handleBack}
+        />
+      )}
+
       <h1>{restaurantData?.name}</h1>
       {selectedTab === "menu" ? <MenuContent /> : <ContactInfo />}
 
