@@ -19,14 +19,14 @@ api.interceptors.request.use(config => {
 
 // Funciones para la autenticación
 export const login = (email, password) => {
-  return api.post("/token-auth/", {
+  return api.post("token-auth/", {
     username: email,
     password: password,
   })
 }
 
 export const register = (restaurantName, email, password) => {
-  return api.post("/api/register/", {
+  return api.post("api/register/", {
     restaurant_name: restaurantName,
     email: email,
     password: password,
@@ -77,11 +77,11 @@ export const checkMenuItemExists = (restaurantId, itemName, categoryIds) => {
 }
 
 export const fetchRestaurant = restaurantId => {
-  return api.get(`/api/restaurants/${restaurantId}/`)
+  return api.get(`api/restaurants/${restaurantId}/`)
 }
 
 export const updateRestaurant = (restaurantId, formData) => {
-  return api.put(`/api/restaurants/${restaurantId}/`, formData, {
+  return api.put(`api/restaurants/${restaurantId}/`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -89,11 +89,11 @@ export const updateRestaurant = (restaurantId, formData) => {
 }
 
 export const updateMenuItemAvailability = (restaurantId, itemId) => {
-  return api.patch(`/api/restaurants/${restaurantId}/menuItems/${itemId}/toggle-availability/`)
+  return api.patch(`api/restaurants/${restaurantId}/menuItems/${itemId}/toggle-availability/`)
 }
 
 export const fetchAuthenticatedUser = restaurantId => {
-  return api.get(`/api/restaurants/${restaurantId}/users/me/`)
+  return api.get(`api/restaurants/${restaurantId}/users/me/`)
 }
 
 const apiMethods = {

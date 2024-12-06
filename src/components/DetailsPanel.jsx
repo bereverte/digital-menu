@@ -11,7 +11,7 @@ import Switch from "react-switch"
 
 export default function DetailsPanel({ selectedSection, restaurantId, showForm, toggleForm }) {
   const [data, setData] = useState([])
-  const { categories } = useContext(RestaurantContext)
+  const { categories, setCategories, setMenuItems } = useContext(RestaurantContext)
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [showModal, setShowModal] = useState(false)
@@ -74,6 +74,13 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
       deleteFunc(restaurantId, itemToDelete.id)
         .then(() => {
           setData(prevData => prevData.filter(item => item.id !== itemToDelete.id))
+          selectedSection === "Categories"
+            ? setCategories(prevCategories =>
+                prevCategories.filter(category => category.id !== itemToDelete.id)
+              )
+            : setMenuItems(prevMenuItems =>
+                prevMenuItems.filter(menuItem => menuItem.id !== itemToDelete.id)
+              )
           closeModal()
         })
         .catch(error => console.error("Error deleting item:", error))
@@ -147,6 +154,17 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
           setData(prevData =>
             prevData.map(item => (item.id === editingItem.id ? response.data : item))
           )
+          selectedSection === "Categories"
+            ? setCategories(prevCategories =>
+                prevCategories.map(category =>
+                  category.id === editingItem.id ? response.data : category
+                )
+              )
+            : setMenuItems(prevMenuItems =>
+                prevMenuItems.map(menuItem =>
+                  menuItem.id === editingItem.id ? response.data : menuItem
+                )
+              )
           resetForm()
           setEditingItem(null) // Reseteamos el ítem en edición
           toggleForm(false)
@@ -163,6 +181,9 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
       addFunc()
         .then(response => {
           setData(prevData => [...prevData, response.data])
+          selectedSection === "Categories"
+            ? setCategories(prevCategories => [...prevCategories, response.data])
+            : setMenuItems(prevMenuItems => [...prevMenuItems, response.data])
           resetForm()
           toggleForm(false)
         })
