@@ -6,9 +6,8 @@ import { getRestaurantUrlName } from "utils"
 
 export default function QRCodePanel() {
   const { restaurantData } = useContext(AuthContext)
-  const previewUrl = `https://digitalmenu-khaki.vercel.app/${getRestaurantUrlName(
-    restaurantData.name
-  )}/carta`
+  const baseUrl = "https://digitalmenu.vercel.app" // URL base de producció
+  const previewUrl = `${baseUrl}/${getRestaurantUrlName(restaurantData.name)}/carta`
 
   return (
     <div className="qr-container">
