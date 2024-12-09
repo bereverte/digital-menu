@@ -43,12 +43,11 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
           console.log("Menu Items response:", response.data)
           setData(response.data)
 
-          // Establecer los estados de disponibilidad para los items del menú
           const initialStatuses = {}
           response.data.forEach(item => {
-            initialStatuses[item.id] = item.is_available // Asegúrate de que 'is_available' esté en la respuesta
+            initialStatuses[item.id] = item.is_available
           })
-          setStatuses(initialStatuses) // Actualiza el estado de `statuses`
+          setStatuses(initialStatuses)
 
           setLoading(false)
         })
@@ -102,9 +101,9 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
       name: Yup.string()
         .required("name is a required field")
         .test("unique-category", "This category name already exists", async value => {
-          if (!value) return true // Si no hay valor, no validamos
+          if (!value) return true // Si no hi ha valor, no validem
           const response = await apiMethods.checkCategoryExists(restaurantId, value)
-          return !response.data.exists // Retorna true si no existe
+          return !response.data.exists // Retorna true si no existeix
         }),
     }),
 
@@ -142,7 +141,7 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
 
   const handleSubmit = (values, { resetForm }) => {
     if (editingItem) {
-      // Editando item o categoría
+      // Editant item o categoria
       const updateFunc = () => {
         return selectedSection === "Categories"
           ? apiMethods.updateCategory(restaurantId, editingItem.id, { name: values.name })
@@ -166,12 +165,12 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
                 )
               )
           resetForm()
-          setEditingItem(null) // Reseteamos el ítem en edición
+          setEditingItem(null) // Resetegem l'item en edició
           toggleForm(false)
         })
         .catch(error => console.error("Error updating item:", error))
     } else {
-      // Creando nuevo item o categoría
+      // Creant nou item o categoria
       const addFunc = () => {
         return selectedSection === "Categories"
           ? apiMethods.createCategory(restaurantId, { name: values.name })
@@ -207,22 +206,21 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
   }, [restaurantId])
 
   const handleStatusChange = async itemId => {
-    // Asegúrate de pasar restaurantId y itemId
     const newStatus = !statuses[itemId]
 
-    // Actualiza el estado del switch en el frontend
     setStatuses(prevStatuses => ({
       ...prevStatuses,
       [itemId]: newStatus,
     }))
 
     try {
-      // Envía la actualización al backend, pasando restaurantId y itemId
       await apiMethods.updateMenuItemAvailability(restaurantId, itemId)
+      setMenuItems(prevItems =>
+        prevItems.map(item => (item.id === itemId ? { ...item, is_available: newStatus } : item))
+      )
       console.log("Availability updated in the database")
     } catch (error) {
       console.error("Failed to update availability:", error)
-      // Si ocurre un error, puedes revertir el cambio en el estado
       setStatuses(prevStatuses => ({
         ...prevStatuses,
         [itemId]: !newStatus,
