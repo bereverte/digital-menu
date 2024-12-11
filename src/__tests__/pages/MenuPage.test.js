@@ -1,8 +1,14 @@
 import React from "react"
-import { render, screen, fireEvent } from "@testing-library/react"
-import { AuthContext } from "contexts/AuthContext"
+import { render, screen, fireEvent, cleanup } from "@testing-library/react"
 import { PreviewContext } from "contexts/PreviewContext"
 import MenuPage from "pages/MenuPage"
+import apiMethods from "api"
+
+jest.mock("api", () => ({
+  fetchRestaurant: jest.fn(),
+  fetchCategories: jest.fn(),
+  fetchMenuItems: jest.fn(),
+}))
 
 jest.mock("components/MenuContent", () => () => <div>Menu Content</div>)
 jest.mock("components/ContactInfo", () => () => <div>Contact Info</div>)
@@ -12,122 +18,96 @@ const mockNavigate = jest.fn()
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useNavigate: () => mockNavigate,
+  useParams: () => ({ restaurantId: "123" }), // Simula `restaurantId`
 }))
 
 describe("MenuPage", () => {
-  const mockUpdateRestaurantData = jest.fn()
-
-  const renderMenuPage = (contextValue, previewMode = false) =>
-    render(
-      <AuthContext.Provider value={contextValue}>
-        <PreviewContext.Provider
-          value={{ isPreviewMode: previewMode, setIsPreviewMode: jest.fn() }}
-        >
-          <MenuPage />
-        </PreviewContext.Provider>
-      </AuthContext.Provider>
-    )
-
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  test("renders restaurant name and menu tab by default", () => {
-    renderMenuPage({
-      restaurantData: {
-        name: "Test Restaurant",
-        address: "123 Main Street, Test City",
-        phone: "123-456-7890",
-        hours: "9:00 AM - 10:00 PM",
-      },
-      restaurantId: "123",
-      updateRestaurantData: mockUpdateRestaurantData,
-    })
+  const renderMenuPage = (restaurantData, previewMode = false) => {
+    apiMethods.fetchRestaurant.mockResolvedValue({ data: restaurantData })
+    apiMethods.fetchCategories.mockResolvedValue({ data: [] })
+    apiMethods.fetchMenuItems.mockResolvedValue({ data: [] })
 
-    screen.debug()
+    render(
+      <PreviewContext.Provider value={{ isPreviewMode: previewMode, setIsPreviewMode: jest.fn() }}>
+        <MenuPage />
+      </PreviewContext.Provider>
+    )
+  }
 
-    expect(screen.getByText("Test Restaurant")).toBeInTheDocument()
-    expect(screen.getByText("Menu Content")).toBeInTheDocument()
+  test("renders menu tab by default", async () => {
+    renderMenuPage()
+
+    expect(await screen.findByText("Menu Content")).toBeInTheDocument()
+    expect(screen.queryByText("Contact Info")).not.toBeInTheDocument()
   })
 
-  test("renders footer icons when contact info is available", () => {
-    renderMenuPage({
-      restaurantData: { name: "Test Restaurant", address: "123 Main Street" },
-      restaurantId: "123",
-      updateRestaurantData: mockUpdateRestaurantData,
-    })
+  test("renders the back arrow only in preview mode", () => {
+    const restaurantData = {
+      id: 123,
+      name: "Test Restaurant",
+      address: "123 Main Street",
+      phone: "123-456-7890",
+      hours: "9:00 AM - 10:00 PM",
+    }
 
-    screen.debug()
+    renderMenuPage(restaurantData, true)
+    expect(screen.getByAltText("Back arrow icon")).toBeInTheDocument()
 
-    expect(screen.getByRole("button", { name: /menu/i })).toBeInTheDocument()
+    cleanup()
+
+    renderMenuPage(restaurantData, false) // isPreviewMode = false
+    expect(screen.queryByAltText("Back arrow icon")).not.toBeInTheDocument()
+  })
+
+  test("renders footer icons if contact info is available", async () => {
+    const restaurantData = {
+      id: 123,
+      name: "Test Restaurant",
+      address: "123 Main Street",
+      phone: "123-456-7890",
+      hours: "9:00 AM - 10:00 PM",
+    }
+
+    renderMenuPage(restaurantData)
+
+    // Simula que existeix informació de contacte
+    expect(await screen.findByRole("button", { name: /menu/i })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: /phone/i })).toBeInTheDocument()
   })
 
-  test("does not render footer icons when contact info is unavailable", () => {
-    renderMenuPage({
-      restaurantData: { name: "Test Restaurant" },
-      restaurantId: "123",
-      updateRestaurantData: mockUpdateRestaurantData,
-    })
+  test("does not render footer icons if contact info is unavailable", async () => {
+    const restaurantData = {
+      id: 123,
+      name: "Test Restaurant",
+    }
 
-    expect(screen.queryByRole("button", { name: /menu/i })).not.toBeInTheDocument()
+    renderMenuPage(restaurantData)
+
+    // Simula que no existeix informació de contacte
+    expect(await screen.queryByRole("button", { name: /menu/i })).not.toBeInTheDocument()
     expect(screen.queryByRole("button", { name: /phone/i })).not.toBeInTheDocument()
   })
 
-  test("switches to contact info tab when phone icon is clicked", () => {
-    renderMenuPage({
-      restaurantData: { name: "Test Restaurant", address: "123 Main Street" },
-      restaurantId: "123",
-      updateRestaurantData: mockUpdateRestaurantData,
-    })
+  test("switches to ContactInfo when phone icon is clicked", async () => {
+    const restaurantData = {
+      id: 123,
+      name: "Test Restaurant",
+      address: "123 Main Street",
+      phone: "123-456-7890",
+      hours: "9:00 AM - 10:00 PM",
+    }
 
-    // Simula el clic al botó del telèfon
+    renderMenuPage(restaurantData)
+
+    expect(await screen.findByRole("button", { name: /phone/i })).toBeInTheDocument()
     fireEvent.click(screen.getByRole("button", { name: /phone/i }))
 
-    // Verifica que es mostra el component ContactInfo
-    expect(screen.getByText("Contact Info")).toBeInTheDocument()
+    // Verifica que es mostra Contact Info
+    expect(await screen.findByText("Contact Info")).toBeInTheDocument()
     expect(screen.queryByText("Menu Content")).not.toBeInTheDocument()
-  })
-
-  test("switches back to menu tab when utensils icon is clicked", () => {
-    renderMenuPage({
-      restaurantData: { name: "Test Restaurant", address: "123 Main Street" },
-      restaurantId: "123",
-      updateRestaurantData: mockUpdateRestaurantData,
-    })
-
-    // Canvia a ContactInfo
-    fireEvent.click(screen.getByRole("button", { name: /phone/i }))
-    expect(screen.getByText("Contact Info")).toBeInTheDocument()
-
-    // Torna a MenuContent
-    fireEvent.click(screen.getByRole("button", { name: /menu/i }))
-    expect(screen.getByText("Menu Content")).toBeInTheDocument()
-  })
-
-  test("renders back arrow only in preview mode", () => {
-    renderMenuPage(
-      {
-        restaurantData: { name: "Test Restaurant", address: "123 Main Street" },
-        restaurantId: "123",
-        updateRestaurantData: mockUpdateRestaurantData,
-      },
-      true // isPreviewMode
-    )
-
-    expect(screen.getByAltText("Back arrow icon")).toBeInTheDocument()
-  })
-
-  test("does not render back arrow when not in preview mode", () => {
-    renderMenuPage(
-      {
-        restaurantData: { name: "Test Restaurant", address: "123 Main Street" },
-        restaurantId: "123",
-        updateRestaurantData: mockUpdateRestaurantData,
-      },
-      false // isPreviewMode
-    )
-
-    expect(screen.queryByAltText("Back arrow icon")).not.toBeInTheDocument()
   })
 })

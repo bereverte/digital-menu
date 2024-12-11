@@ -1,9 +1,8 @@
 import React from "react"
 import { render, screen, fireEvent } from "@testing-library/react"
-import { RestaurantContext } from "contexts/RestaurantContext"
 import MenuContent from "components/MenuContent"
 
-test("renders categories and menu items", () => {
+describe("MenuContent component", () => {
   const mockCategories = [
     { id: 1, name: "Starters" },
     { id: 2, name: "Main Courses" },
@@ -26,23 +25,69 @@ test("renders categories and menu items", () => {
       is_available: true,
       categories: [2],
     },
+    {
+      id: 203,
+      name: "Unavailable Item",
+      description: "Not currently available",
+      price: 15,
+      is_available: false,
+      categories: [1],
+    },
   ]
 
-  render(
-    <RestaurantContext.Provider value={{ categories: mockCategories, menuItems: mockMenuItems }}>
-      <MenuContent />
-    </RestaurantContext.Provider>
-  )
+  const renderMenuContent = () => {
+    render(<MenuContent categories={mockCategories} menuItems={mockMenuItems} />)
+  }
 
-  expect(screen.getByText("Starters")).toBeInTheDocument()
-  expect(screen.getByText("Main Courses")).toBeInTheDocument()
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
 
-  expect(screen.getByText("Bruschetta")).toBeInTheDocument()
-  expect(screen.getByText("Tasty appetizer")).toBeInTheDocument()
-  expect(screen.getByText("7 €")).toBeInTheDocument()
+  test("renders categories and menu items", () => {
+    renderMenuContent()
 
-  fireEvent.click(screen.getByText("Main Courses"))
-  expect(screen.getByText("Pasta")).toBeInTheDocument()
-  expect(screen.getByText("Delicious pasta")).toBeInTheDocument()
-  expect(screen.getByText("12 €")).toBeInTheDocument()
+    expect(screen.getByText("Starters")).toBeInTheDocument()
+    expect(screen.getByText("Main Courses")).toBeInTheDocument()
+
+    expect(screen.getByText("Bruschetta")).toBeInTheDocument()
+    expect(screen.getByText("Tasty appetizer")).toBeInTheDocument()
+    expect(screen.getByText("7 €")).toBeInTheDocument()
+
+    expect(screen.queryByText("Unavailable Item")).not.toBeInTheDocument()
+    expect(screen.queryByText("Pasta")).not.toBeInTheDocument()
+  })
+
+  test("renders menu items for the selected category", () => {
+    renderMenuContent()
+
+    fireEvent.click(screen.getByText("Main Courses"))
+
+    expect(screen.getByText("Pasta")).toBeInTheDocument()
+    expect(screen.getByText("Delicious pasta")).toBeInTheDocument()
+    expect(screen.getByText("12 €")).toBeInTheDocument()
+
+    expect(screen.queryByText("Bruschetta")).not.toBeInTheDocument()
+  })
+
+  test("does not render categories with no active menu items", () => {
+    const emptyCategory = { id: 3, name: "Drinks" }
+
+    render(
+      <MenuContent categories={[...mockCategories, emptyCategory]} menuItems={mockMenuItems} />
+    )
+
+    expect(screen.queryByText("Drinks")).not.toBeInTheDocument()
+  })
+
+  test("switches back to previous category items after navigation", () => {
+    renderMenuContent()
+
+    fireEvent.click(screen.getByText("Main Courses"))
+
+    expect(screen.getByText("Pasta")).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText("Starters"))
+
+    expect(screen.getByText("Bruschetta")).toBeInTheDocument()
+  })
 })

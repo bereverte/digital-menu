@@ -1,9 +1,6 @@
-import React, { useContext } from "react"
-import { AuthContext } from "contexts/AuthContext"
+import React from "react"
 
-export default function ContactInfo() {
-  const { restaurantData } = useContext(AuthContext)
-
+export default function ContactInfo({ restaurantData }) {
   return (
     <div className="contact-content">
       <h2>Contact Information</h2>

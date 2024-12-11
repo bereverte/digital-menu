@@ -141,9 +141,14 @@ li {
   .menu-page {
     align-items: center;
   }
+
   .react-tabs {
     max-width: 800px;
     width: 100%;
+  }
+
+  .menu-content {
+    min-width: 400px;
   }
 
   .menu-items {

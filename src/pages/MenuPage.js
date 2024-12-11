@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react"
-import { AuthContext } from "contexts/AuthContext"
+import { useParams } from "react-router-dom"
 import { PreviewContext } from "contexts/PreviewContext"
 import MenuContent from "components/MenuContent"
 import ContactInfo from "components/ContactInfo"
@@ -7,13 +7,17 @@ import { FaUtensils, FaPhone } from "react-icons/fa"
 import "styles/MenuPage.scss"
 import { useNavigate } from "react-router-dom"
 import backArrow from "assets/icons/arrow-left-circle.svg"
+import apiMethods from "api"
 
 export default function MenuPage() {
-  const { restaurantData, restaurantId, updateRestaurantData } = useContext(AuthContext)
+  const { restaurantId } = useParams()
+  const [restaurantData, setRestaurantData] = useState(null)
+  const [menuItems, setMenuItems] = useState([])
+  const [categories, setCategories] = useState([])
+  const [selectedTab, setSelectedTab] = useState("menu")
+
   const { isPreviewMode, setIsPreviewMode } = useContext(PreviewContext)
   const navigate = useNavigate()
-
-  const [selectedTab, setSelectedTab] = useState("menu")
 
   const handleBack = () => {
     setIsPreviewMode(false)
@@ -21,15 +25,26 @@ export default function MenuPage() {
   }
 
   useEffect(() => {
-    // Si `restaurantData` ja està carregat al context, no cal fer cap altra crida
-    if (!restaurantData && restaurantId) {
-      updateRestaurantData()
+    const fetchData = async () => {
+      try {
+        // Carrega dades del restaurant, categories i ítems
+        const [restaurantRes, categoriesRes, menuItemsRes] = await Promise.all([
+          apiMethods.fetchRestaurant(restaurantId),
+          apiMethods.fetchCategories(restaurantId),
+          apiMethods.fetchMenuItems(restaurantId),
+        ])
+        setRestaurantData(restaurantRes.data)
+        setCategories(categoriesRes.data)
+        setMenuItems(menuItemsRes.data)
+      } catch (error) {
+        console.error("Error loading restaurant data:", error)
+      }
     }
-  }, [restaurantData, restaurantId, updateRestaurantData])
+
+    fetchData()
+  }, [restaurantId])
 
   const hasContactInfo = restaurantData?.address || restaurantData?.phone || restaurantData?.hours
-
-  console.log("isPreviewMode:", isPreviewMode)
 
   return (
     <div className="menu-page">
@@ -43,7 +58,11 @@ export default function MenuPage() {
       )}
 
       <h1>{restaurantData?.name}</h1>
-      {selectedTab === "menu" ? <MenuContent /> : <ContactInfo />}
+      {selectedTab === "menu" ? (
+        <MenuContent categories={categories} menuItems={menuItems} />
+      ) : (
+        <ContactInfo restaurantData={restaurantData} />
+      )}
 
       {hasContactInfo && (
         <div className="footer-icons">

@@ -19,7 +19,12 @@ describe("Header component", () => {
   const renderHeader = () =>
     render(
       <BrowserRouter>
-        <AuthContext.Provider value={{ restaurantData: mockRestaurantData }}>
+        <AuthContext.Provider
+          value={{
+            restaurantData: mockRestaurantData,
+            restaurantId: 1,
+          }}
+        >
           <PreviewContext.Provider value={{ setIsPreviewMode: jest.fn() }}>
             <Header />
           </PreviewContext.Provider>
@@ -62,7 +67,7 @@ describe("Header component", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/home")
 
     fireEvent.click(screen.getByText("Preview"))
-    expect(mockNavigate).toHaveBeenCalledWith("/test-restaurant/carta")
+    expect(mockNavigate).toHaveBeenCalledWith("/menu/1")
 
     fireEvent.click(screen.getByText("Profile"))
     expect(mockNavigate).toHaveBeenCalledWith("/profile")
@@ -89,6 +94,6 @@ describe("Header component", () => {
 
     const previewLink = screen.getByText("Preview")
     fireEvent.click(previewLink)
-    expect(mockNavigate).toHaveBeenCalledWith("/test-restaurant/carta")
+    expect(mockNavigate).toHaveBeenCalledWith("/menu/1")
   })
 })

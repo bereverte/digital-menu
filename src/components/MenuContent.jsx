@@ -1,22 +1,24 @@
-import React, { useContext } from "react"
-import { RestaurantContext } from "contexts/RestaurantContext"
+import React from "react"
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs"
 
-export default function MenuContent() {
-  const { categories, menuItems } = useContext(RestaurantContext)
-
+export default function MenuContent({ categories, menuItems }) {
   const activeMenuItems = menuItems.filter(item => item.is_available)
+
+  // Filtra categories que tenen almenys un ítem disponible
+  const filteredCategories = categories.filter(category =>
+    activeMenuItems.some(item => item.categories.includes(category.id))
+  )
 
   return (
     <div className="menu-content">
       <Tabs>
         <TabList>
-          {categories.map(category => (
+          {filteredCategories.map(category => (
             <Tab key={category.id}>{category.name}</Tab>
           ))}
         </TabList>
 
-        {categories.map(category => (
+        {filteredCategories.map(category => (
           <TabPanel key={category.id}>
             <div className="menu-items">
               {activeMenuItems

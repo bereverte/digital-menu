@@ -2,12 +2,21 @@ import React from "react"
 import { QRCodeSVG } from "qrcode.react"
 import { useContext } from "react"
 import { AuthContext } from "contexts/AuthContext"
-import { getRestaurantUrlName } from "utils"
 
 export default function QRCodePanel() {
-  const { restaurantData } = useContext(AuthContext)
-  const baseUrl = "https://digitalmenu.vercel.app" // URL base de producció
-  const previewUrl = `${baseUrl}/${getRestaurantUrlName(restaurantData.name)}/carta`
+  const { restaurantData, restaurantId } = useContext(AuthContext)
+  const baseUrl = "https://digitalmenu-khaki.vercel.app" // URL base de producció
+
+  if (!restaurantId || !restaurantData) {
+    return (
+      <div className="qr-container">
+        <div className="profile-qr-header">QR Code to Preview</div>
+        <div>Loading...</div>
+      </div>
+    )
+  }
+
+  const previewUrl = `${baseUrl}/menu/${restaurantId}`
 
   return (
     <div className="qr-container">

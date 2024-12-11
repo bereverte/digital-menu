@@ -123,13 +123,15 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
               return true // No cridem l'API si estem editant
             }
 
-            // Crida a l'API per verificar si existeix un ítem de menú amb el mateix nom i categories
             const response = await apiMethods.checkMenuItemExists(restaurantId, value, categories)
             return !response.data.exists
           }
         ),
       categories: Yup.array().min(1, "select at least one category"),
-      price: Yup.number().min(0.01, "invalid price").required("price is a required field"),
+      price: Yup.number()
+        .min(0.01, "invalid price")
+        .max(999, "invalid price")
+        .required("price is a required field"),
     }),
   })
 
@@ -179,10 +181,20 @@ export default function DetailsPanel({ selectedSection, restaurantId, showForm, 
 
       addFunc()
         .then(response => {
-          setData(prevData => [...prevData, response.data])
-          selectedSection === "Categories"
-            ? setCategories(prevCategories => [...prevCategories, response.data])
-            : setMenuItems(prevMenuItems => [...prevMenuItems, response.data])
+          const newItem = response.data
+
+          setData(prevData => [...prevData, newItem])
+
+          if (selectedSection === "Categories") {
+            setCategories(prevCategories => [...prevCategories, newItem])
+          } else {
+            setMenuItems(prevMenuItems => [...prevMenuItems, newItem])
+
+            setStatuses(prevStatuses => ({
+              ...prevStatuses,
+              [newItem.id]: newItem.is_available,
+            }))
+          }
           resetForm()
           toggleForm(false)
         })

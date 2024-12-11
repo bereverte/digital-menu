@@ -68,7 +68,6 @@ export const AuthProvider = ({ children }) => {
     try {
       await apiMethods.updateRestaurant(restaurantId, updatedData)
 
-      // Torna a carregar restaurantData des del backend per assegurar que té la URL correcta
       const restaurantResponse = await apiMethods.fetchRestaurant(restaurantId)
       setRestaurantData(restaurantResponse.data)
     } catch (error) {

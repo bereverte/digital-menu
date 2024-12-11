@@ -8,39 +8,26 @@ export default function ProfilePanel() {
   const { restaurantData, restaurantId, updateRestaurantData, userData } = useContext(AuthContext)
   const navigate = useNavigate()
 
-  console.log("Restaurant Data:", restaurantData)
-  console.log("User Data:", userData)
-
-  console.log("Logo:", restaurantData.logo)
-  console.log("Ja esta")
-
   const email = userData?.email
 
-  // Inicialització amb valors buits per evitar advertències
   const [restaurantName, setRestaurantName] = useState("")
   const [address, setAddress] = useState("")
   const [phone, setPhone] = useState("")
   const [hours, setHours] = useState("")
-  const [profilePhoto, setProfilePhoto] = useState(imageProfileDefault) // Per defecte, la imatge per defecte
+  const [profilePhoto, setProfilePhoto] = useState(imageProfileDefault)
   const [selectedFile, setSelectedFile] = useState(null)
 
   const handleCancel = () => {
     navigate("/home")
   }
 
-  // Sincronitza els estats locals amb restaurantData quan es carrega
   useEffect(() => {
     if (restaurantData) {
-      console.log("Dades actualitzades de restaurantData:", restaurantData)
-      console.log("URL de logo a restaurantData:", restaurantData.logo)
-
       setRestaurantName(restaurantData.name || "")
       setAddress(restaurantData.address || "")
       setPhone(restaurantData.phone || "")
       setHours(restaurantData.hours || "")
-
-      // Assegura't que `profilePhoto` s'assigna correctament
-      setProfilePhoto(restaurantData.logo ? restaurantData.logo : imageProfileDefault)
+      setProfilePhoto(restaurantData.logo || imageProfileDefault)
     }
   }, [restaurantData])
 

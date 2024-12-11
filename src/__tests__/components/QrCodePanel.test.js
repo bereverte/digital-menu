@@ -1,16 +1,23 @@
 import { render, screen } from "@testing-library/react"
 import QRCodePanel from "components/QRCodePanel"
 import { AuthContext } from "contexts/AuthContext"
-import { getRestaurantUrlName } from "utils"
+
+jest.mock("qrcode.react", () => ({
+  QRCodeSVG: ({ value }) => <svg data-testid="qr-code" data-value={value} />,
+}))
 
 describe("QRCodePanel component", () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   const mockRestaurantData = {
     name: "Test Restaurant",
   }
 
   const renderQRCodePanel = () => {
     render(
-      <AuthContext.Provider value={{ restaurantData: mockRestaurantData }}>
+      <AuthContext.Provider value={{ restaurantData: mockRestaurantData, restaurantId: 1 }}>
         <QRCodePanel />
       </AuthContext.Provider>
     )
@@ -21,7 +28,6 @@ describe("QRCodePanel component", () => {
 
     const qrCode = screen.getByTestId("qr-code")
     expect(qrCode).toBeInTheDocument()
-
     expect(qrCode.tagName).toBe("svg")
   })
 
@@ -32,9 +38,25 @@ describe("QRCodePanel component", () => {
     expect(screen.getByText("Scan the QR code to preview the page!")).toBeInTheDocument()
   })
 
-  test("generates URL correctly with getRestaurantUrlName", () => {
-    expect(getRestaurantUrlName("Test Restaurant")).toBe("test-restaurant")
-    expect(getRestaurantUrlName("My Fancy Restaurant")).toBe("my-fancy-restaurant")
-    expect(getRestaurantUrlName("Café Déjà Vu")).toBe("cafe-deja-vu")
+  test("renders 'Loading...' if restaurantId or restaurantData is missing", () => {
+    render(
+      <AuthContext.Provider value={{ restaurantData: null, restaurantId: null }}>
+        <QRCodePanel />
+      </AuthContext.Provider>
+    )
+
+    expect(screen.getByText("Loading...")).toBeInTheDocument()
+    expect(screen.queryByTestId("qr-code")).not.toBeInTheDocument()
+  })
+
+  test("generates the correct URL for the QR code", () => {
+    const mockRestaurantId = 1
+    const mockBaseUrl = "https://digitalmenu-khaki.vercel.app"
+
+    renderQRCodePanel(mockRestaurantId)
+
+    const qrCode = screen.getByTestId("qr-code")
+
+    expect(qrCode).toHaveAttribute("data-value", `${mockBaseUrl}/menu/${mockRestaurantId}`)
   })
 })

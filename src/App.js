@@ -35,8 +35,11 @@ function AppRoutes() {
       />
       <Route path="/accounts/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/:restaurantName/carta" element={<MenuPage />} />
+      <Route
+        path="/profile"
+        element={isAuthenticated() ? <Profile /> : <Navigate to="/accounts/login" />}
+      />
+      <Route path="/menu/:restaurantId" element={<MenuPage />} />
     </Routes>
   )
 }
