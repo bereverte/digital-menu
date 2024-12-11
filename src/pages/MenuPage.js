@@ -29,9 +29,9 @@ export default function MenuPage() {
       try {
         // Carrega dades del restaurant, categories i ítems
         const [restaurantRes, categoriesRes, menuItemsRes] = await Promise.all([
-          apiMethods.fetchRestaurant(restaurantId),
-          apiMethods.fetchCategories(restaurantId),
-          apiMethods.fetchMenuItems(restaurantId),
+          apiMethods.fetchRestaurant(restaurantId, true),
+          apiMethods.fetchCategories(restaurantId, true),
+          apiMethods.fetchMenuItems(restaurantId, true),
         ])
         setRestaurantData(restaurantRes.data)
         setCategories(categoriesRes.data)

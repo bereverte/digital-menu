@@ -33,8 +33,11 @@ export const register = (restaurantName, email, password) => {
   })
 }
 
-export const fetchCategories = restaurantId => {
-  return api.get(`api/restaurants/${restaurantId}/categories/`)
+export const fetchCategories = (restaurantId, isPublic = false) => {
+  const url = isPublic
+    ? `api/restaurants/${restaurantId}/categories/public/`
+    : `api/restaurants/${restaurantId}/categories/`
+  return api.get(url)
 }
 
 export const createCategory = (restaurantId, categoryData) => {
@@ -49,8 +52,11 @@ export const updateCategory = (restaurantId, categoryId, categoryData) => {
   return api.put(`api/restaurants/${restaurantId}/categories/${categoryId}/`, categoryData)
 }
 
-export const fetchMenuItems = restaurantId => {
-  return api.get(`api/restaurants/${restaurantId}/menuItems/`)
+export const fetchMenuItems = (restaurantId, isPublic = false) => {
+  const url = isPublic
+    ? `api/restaurants/${restaurantId}/menuItems/public/`
+    : `api/restaurants/${restaurantId}/menuItems/`
+  return api.get(url)
 }
 
 export const createMenuItem = (restaurantId, menuItem) => {
@@ -76,8 +82,11 @@ export const checkMenuItemExists = (restaurantId, itemName, categoryIds) => {
   )
 }
 
-export const fetchRestaurant = restaurantId => {
-  return api.get(`api/restaurants/${restaurantId}/`)
+export const fetchRestaurant = (restaurantId, isPublic = false) => {
+  const url = isPublic
+    ? `api/restaurants/${restaurantId}/public/`
+    : `api/restaurants/${restaurantId}/`
+  return api.get(url)
 }
 
 export const updateRestaurant = (restaurantId, formData) => {
