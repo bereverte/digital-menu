@@ -1,70 +1,55 @@
-# Getting Started with Create React App
+# Digital Menu - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Description
+**Digital Menu** is a web-based application that allows restaurant owners to manage their menu and restaurant details through a user-friendly interface. This project is part of a full-stack solution built using React for the frontend and Django for the backend.
 
-## Available Scripts
+### Features:
+- User Authentication (Login/Register).
+- Dashboard to manage categories and menu items:
+  - Add, edit, delete, and filter menu items by category.
+  - Validate inputs for duplicate items, invalid prices, and required fields.
+- Toggle item availability with a switch.
+- Profile section to update restaurant information (name, logo, address, hours, and contact).
+- Preview mode to view the menu page with restaurant details and items.
+- Logout functionality for account security.
 
-In the project directory, you can run:
+### Deployed URL
 
-### `npm start`
+Visit the deployed application: [Digital Menu Frontend](https://digitalmenu-khaki.vercel.app)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Project Setup
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Prerequisites
 
-### `npm test`
+Ensure you have the following installed:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Node.js** (v14 or later)
+- **npm** (v6 or later)
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/bereverte/digital-menu-FE.git
+   cd digital-menu-FE
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install dependencies:
+   ```bash
+   npm install
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Create a .env file in the root directory and add the following:
+   ```bash
+   REACT_APP_API_BASE_URL=https://digital-menu-backend-hfa5.onrender.com
 
-### `npm run eject`
+4. Start the development server:
+   ```bash
+   npm start
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The app will be accessible at `http://localhost:3000`.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Technologies Used:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **React** for the frontend framework.
+- **React-Router** for navigation.
+- **Axios** for API requests.
+- **SCSS** for styling.
